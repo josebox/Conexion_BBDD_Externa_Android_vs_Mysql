@@ -39,8 +39,8 @@ public class MainActivity extends AppCompatActivity {
         btnconsultar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                new ConsultarDatos().execute("http://10.34.84.116/CursoAndroid/consulta.php?id="+etId.getText().toString());
+                new todosUsuarios().execute("http://10.34.84.116/CursoAndroid/todos.php?");
+               // new ConsultarDatos().execute("http://10.34.84.116/CursoAndroid/consulta.php?id="+etId.getText().toString());
 
             }
         });
@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.v("Datos","Entro");
 
-                //new CargarDatos().execute("http://37.187.198.145/llamas/registro.php?nombres="+etNombres.getText().toString()+"&tel="+etTelefono.getText().toString());
+                //new todosUsuarios().execute("http://37.187.198.145/llamas/registro.php?nombres="+etNombres.getText().toString()+"&tel="+etTelefono.getText().toString());
                 new CargarDatos().execute("http://10.34.84.116/CursoAndroid/registro.php?nombres="+etNombres.getText().toString()+"&tel="+etTelefono.getText().toString());
             }
         });
@@ -101,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
                 etNombres.setText(ja.getString(1));
                 etTelefono.setText(ja.getString(2));
 
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -127,9 +128,12 @@ public class MainActivity extends AppCompatActivity {
 
             JSONArray ja = null;
             try {
+
                 ja = new JSONArray(result);
-                etNombres.setText(ja.getString(1));
-                etTelefono.setText(ja.getString(2));
+                for (int i = 0 ; i < ja.length() ; i++){
+                    ja.getString(i);
+                    Log.v("ja",ja.getString(i));
+                }
 
             } catch (JSONException e) {
                 e.printStackTrace();
