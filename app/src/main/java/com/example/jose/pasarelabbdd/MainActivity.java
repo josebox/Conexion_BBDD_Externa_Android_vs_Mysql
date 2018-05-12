@@ -39,8 +39,8 @@ public class MainActivity extends AppCompatActivity {
         btnconsultar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new todosUsuarios().execute("http://10.34.84.116/CursoAndroid/todos.php?");
-               // new ConsultarDatos().execute("http://10.34.84.116/CursoAndroid/consulta.php?id="+etId.getText().toString());
+                //new todosUsuarios().execute("http://10.0.2.2/CursoAndroid/todos.php?");
+               new ConsultarDatos().execute("http://10.0.2.2/CursoAndroid/consulta.php?id="+etId.getText().toString());
 
             }
         });
@@ -51,9 +51,43 @@ public class MainActivity extends AppCompatActivity {
                 Log.v("Datos","Entro");
 
                 //new todosUsuarios().execute("http://37.187.198.145/llamas/registro.php?nombres="+etNombres.getText().toString()+"&tel="+etTelefono.getText().toString());
-                new CargarDatos().execute("http://10.34.84.116/CursoAndroid/registro.php?nombres="+etNombres.getText().toString()+"&tel="+etTelefono.getText().toString());
+               // new CargarDatos().execute("http://10.34.80.214/CursoAndroid/registro.php?nombres="+etNombres.getText().toString()+"&tel="+etTelefono.getText().toString());
+                new CargarDatos().execute("http://10.0.2.2/CursoAndroid/registro.php?nombres="+etNombres.getText().toString()+"&tel="+etTelefono.getText().toString());
             }
         });
+    }
+
+    //consultar datos
+
+    private class ConsultarDatos extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... urls) {
+
+            // params comes from the execute() call: params[0] is the url.
+            try {
+                return downloadUrl(urls[0]);
+            } catch (IOException e) {
+                return "Unable to retrieve web page. URL may be invalid.";
+            }
+        }
+        // onPostExecute displays the results of the AsyncTask.
+        @Override
+        protected void onPostExecute(String result) {
+            Log.v("result",result);
+
+            JSONArray ja = null;
+            try {
+                ja = new JSONArray(result);
+                Log.v("jaresult", String.valueOf(ja));
+                etNombres.setText(ja.getString(1));
+                etTelefono.setText(ja.getString(2));
+
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
     }
 
     //metodo para cargar datos = lo que hace es recuperar los datos e ingresalos en un texView
@@ -78,36 +112,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    //consultar datos
 
-    private class ConsultarDatos extends AsyncTask<String, Void, String> {
-        @Override
-        protected String doInBackground(String... urls) {
-
-            // params comes from the execute() call: params[0] is the url.
-            try {
-                return downloadUrl(urls[0]);
-            } catch (IOException e) {
-                return "Unable to retrieve web page. URL may be invalid.";
-            }
-        }
-        // onPostExecute displays the results of the AsyncTask.
-        @Override
-        protected void onPostExecute(String result) {
-
-            JSONArray ja = null;
-            try {
-                ja = new JSONArray(result);
-                etNombres.setText(ja.getString(1));
-                etTelefono.setText(ja.getString(2));
-
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-        }
-    }
 
     //obtener datos de un solo usuario
 
@@ -132,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
                 ja = new JSONArray(result);
                 for (int i = 0 ; i < ja.length() ; i++){
                     ja.getString(i);
-                    Log.v("ja",ja.getString(i));
+                    Log.v("jatodos",ja.getString(i));
                 }
 
             } catch (JSONException e) {
@@ -189,3 +194,27 @@ public class MainActivity extends AppCompatActivity {
         return new String(buffer);
     }
 }
+
+/*
+
+    private class CargarDatos extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... urls) {
+            Log.v("Datos","Entro2");
+
+            // params comes from the execute() call: params[0] is the url.
+            try {
+                return downloadUrl(urls[0]);
+            } catch (IOException e) {
+                return "Unable to retrieve web page. URL may be invalid.";
+            }
+        }
+        // onPostExecute displays the results of the AsyncTask.
+        @Override
+        protected void onPostExecute(String result) {
+            Log.v("Datos","Entro3");
+            Toast.makeText(getApplicationContext(), "Se almacenaron los datos correctamente", Toast.LENGTH_LONG).show();
+
+        }
+    }
+ */
